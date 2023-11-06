@@ -1,0 +1,5 @@
+Django>=4.1,<4.1.5
+factory-boy==3.2.1
+Faker==17.0.0
+colorlog==6.7.0
+openpyxl==3.1.2
