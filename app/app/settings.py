@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MYSQL = True
 
 # Application definition
 
@@ -74,13 +75,26 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if MYSQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'mssql',
+            'NAME': 'carshare',
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'OPTIONS': {
+                'driver': 'ODBC Driver 17 for SQL Server',
+            },
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -180,3 +194,16 @@ manufacturer_models = {
 
 
 BACKUP_DIR = BASE_DIR / 'data' / 'backups'
+
+CSV_COLUMNS = [
+    "Numer rejestracyjny",
+    "Przebieg",
+    "Poziom oleju",
+    "Poziom płynu chłodniczego",
+    "Poziom płynu hamulcowego",
+    "Poziom płynu do spryskiwaczy",
+    "Stan wizualny",
+    "Stan techniczny"
+]
+
+CSV_FILE_NAME = "stan_techniczny_samochodow.xlsx"

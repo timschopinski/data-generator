@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        self.stdout.write(self.style.SUCCESS(f'Deleting instances ...'))
+        self.stdout.write(self.style.WARNING(f'Deleting instances ...'))
         try:
             clear_models()
             self.stdout.write(self.style.SUCCESS(f'Instances successfully deleted ...'))

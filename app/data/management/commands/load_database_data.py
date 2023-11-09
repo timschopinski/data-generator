@@ -29,7 +29,7 @@ class Command(BaseCommand):
         client_amount = options['clients'] or self.default_clients_amount
         rental_amount = options['rentals'] or self.default_rentals_amount
 
-        self.stdout.write(self.style.SUCCESS(f'Generating instances ...'))
+        self.stdout.write(self.style.WARNING(f'Generating instances ...'))
         try:
             create_departments(department_amount)
             create_workers(worker_amount)

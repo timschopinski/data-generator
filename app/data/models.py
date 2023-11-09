@@ -15,14 +15,14 @@ class Samochod(models.Model):
 
 
 class Klient(models.Model):
-    id_klienta = models.IntegerField(primary_key=True)
+    id_klienta = models.AutoField(primary_key=True)
     imie = models.CharField(max_length=50)
     nazwisko = models.CharField(max_length=50)
     wiek = models.IntegerField()
 
 
 class Wypozyczenie(models.Model):
-    id_wypozyczenia = models.IntegerField(primary_key=True)
+    id_wypozyczenia = models.AutoField(primary_key=True)
     id_klienta = models.ForeignKey(Klient, on_delete=models.CASCADE)
     numer_rejestracyjny = models.ForeignKey(Samochod, on_delete=models.CASCADE)
     id_oddzialu = models.ForeignKey('Oddzial', on_delete=models.CASCADE)
@@ -31,12 +31,12 @@ class Wypozyczenie(models.Model):
 
 
 class Oddzial(models.Model):
-    id_oddzialu = models.IntegerField(primary_key=True)
+    id_oddzialu = models.AutoField(primary_key=True)
     lokalizacja = models.CharField(max_length=50)
 
 
 class Pracownik(models.Model):
-    id_pracownika = models.IntegerField(primary_key=True)
+    id_pracownika = models.AutoField(primary_key=True)
     id_oddzialu = models.ForeignKey(Oddzial, on_delete=models.CASCADE)
     imie = models.CharField(max_length=50)
     nazwisko = models.CharField(max_length=50)

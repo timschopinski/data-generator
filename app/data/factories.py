@@ -104,7 +104,10 @@ def create_cars(amount):
         'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S',
         '1', '2', '3', '4', '5', '6', '7', '8', '9',
     ]
-
+    contidions = [
+        'dobry', 'uszkodzony', 'powypadkowy', 'nowy', 'nowy', 'nowy',
+        'dobry', 'uszkodzony', 'nowy', 'nowy', 'nowy', 'nowy',
+    ]
     for _ in range(amount):
         random.shuffle(characters)
         department = random.choice(departments)
@@ -120,7 +123,7 @@ def create_cars(amount):
             skrzynia_biegow=random.choice(['automatyczna', 'manualna']),
             naped=random.choice(['benzynowy', 'elektryczny', 'diesel']),
             rok_dodania=datetime.strftime(faker.date_of_birth(minimum_age=1, maximum_age=10), '%Y'),
-            stan=faker.word()
+            stan=random.choice(contidions)
         )
 
     logger.info(f'{amount} {Samochod.__name__} instances created successfully')
