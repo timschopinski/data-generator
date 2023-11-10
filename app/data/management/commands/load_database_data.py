@@ -1,3 +1,5 @@
+import time
+
 from django.core.management.base import BaseCommand
 from data.factories import create_cars, create_clients, create_rentals, create_workers, create_departments
 
@@ -30,6 +32,7 @@ class Command(BaseCommand):
         rental_amount = options['rentals'] or self.default_rentals_amount
 
         self.stdout.write(self.style.WARNING(f'Generating instances ...'))
+        t = time.perf_counter()
         try:
             create_departments(department_amount)
             create_workers(worker_amount)
@@ -39,3 +42,4 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Successfully generated instances'))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Failed to generate instances - {e}'))
+        print(f'Time: {time.perf_counter() - t}s')

@@ -76,22 +76,29 @@ class WypozyczenieFactory(factory.django.DjangoModelFactory):
 
 def create_workers(amount):
     departments = Oddzial.objects.all()
+    workers = []
     for _ in range(amount):
         department = random.choice(departments)
-        Pracownik.objects.create(
-            imie=faker.first_name(),
-            nazwisko=faker.last_name(),
-            wiek=random.randint(20, 60),
-            staz_pracy=random.randint(1, 15),
-            id_oddzialu=department
+        workers.append(
+            Pracownik(
+                imie=faker.first_name(),
+                nazwisko=faker.last_name(),
+                wiek=random.randint(20, 60),
+                staz_pracy=random.randint(1, 15),
+                id_oddzialu=department
+            )
         )
+    Pracownik.objects.bulk_create(workers)
     logger.info(f'{amount} {Pracownik.__name__} instances created successfully')
 
 
 def create_departments(amount):
-
+    departments = []
     for _ in range(amount):
-        Oddzial.objects.create(lokalizacja=faker.city())
+        departments.append(
+            Oddzial(lokalizacja=faker.city())
+        )
+    Oddzial.objects.bulk_create(departments)
     logger.info(f'{amount} {Oddzial.__name__} instances created successfully')
 
 
@@ -102,40 +109,51 @@ def create_cars(amount):
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
         '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S',
+        'U', 'W', 'X', 'Y', 'Z', 'O', 'P', 'R', 'S',
         '1', '2', '3', '4', '5', '6', '7', '8', '9',
     ]
     contidions = [
         'dobry', 'uszkodzony', 'powypadkowy', 'nowy', 'nowy', 'nowy',
         'dobry', 'uszkodzony', 'nowy', 'nowy', 'nowy', 'nowy',
     ]
+    cars = []
     for _ in range(amount):
         random.shuffle(characters)
         department = random.choice(departments)
         manufacturer = random.choice(list(manufacturer_models.keys()))
         model_idx = random.randint(0, len(manufacturer_models[manufacturer]['models']) - 1)
-        Samochod.objects.create(
-            numer_rejestracyjny=f'{department.lokalizacja[:2].upper()}{"".join(characters)[:7]}',
-            id_oddzialu=department,
-            producent=manufacturer,
-            model=manufacturer_models[manufacturer]['models'][model_idx],
-            typ=manufacturer_models[manufacturer]['types'][model_idx],
-            cena=random.randint(50, 1000),
-            skrzynia_biegow=random.choice(['automatyczna', 'manualna']),
-            naped=random.choice(['benzynowy', 'elektryczny', 'diesel']),
-            rok_dodania=datetime.strftime(faker.date_of_birth(minimum_age=1, maximum_age=10), '%Y'),
-            stan=random.choice(contidions)
-        )
+        import uuid
 
+        cars.append(
+            Samochod(
+                # numer_rejestracyjny=f'{department.lokalizacja[:2].upper()}{"".join(characters)[:7]}',
+                numer_rejestracyjny=f'{str(uuid.uuid4())[:15]}',
+                id_oddzialu=department,
+                producent=manufacturer,
+                model=manufacturer_models[manufacturer]['models'][model_idx],
+                typ=manufacturer_models[manufacturer]['types'][model_idx],
+                cena=random.randint(50, 1000),
+                skrzynia_biegow=random.choice(['automatyczna', 'manualna']),
+                naped=random.choice(['benzynowy', 'elektryczny', 'diesel']),
+                rok_dodania=datetime.strftime(faker.date_of_birth(minimum_age=1, maximum_age=10), '%Y'),
+                stan=random.choice(contidions)
+            )
+        )
+    Samochod.objects.bulk_create(cars)
     logger.info(f'{amount} {Samochod.__name__} instances created successfully')
 
 
 def create_clients(amount):
+    clients = []
     for _ in range(amount):
-        Klient.objects.create(
-            imie=faker.first_name(),
-            nazwisko=faker.last_name(),
-            wiek=random.randint(18, 80)
+        clients.append(
+            Klient(
+                imie=faker.first_name(),
+                nazwisko=faker.last_name(),
+                wiek=random.randint(18, 80)
+            )
         )
+    Klient.objects.bulk_create(clients)
     logger.info(f'{amount} {Klient.__name__} instances created successfully')
 
 
@@ -143,17 +161,21 @@ def create_rentals(amount):
     clients = Klient.objects.all()
     cars = Samochod.objects.all()
     departments = Oddzial.objects.all()
+    rentals = []
     for _ in range(amount):
         car = random.choice(cars)
         client = random.choice(clients)
         department = random.choice(departments)
         data_wynajecia = faker.date_between(start_date='-30d', end_date='today')
         data_zwrotu = data_wynajecia + timedelta(days=random.randint(1, 14))
-        Wypozyczenie.objects.create(
-            id_klienta=client,
-            numer_rejestracyjny=car,
-            id_oddzialu=department,
-            data_wynajecia=data_wynajecia,
-            data_zwrotu=data_zwrotu
+        rentals.append(
+            Wypozyczenie(
+                id_klienta=client,
+                numer_rejestracyjny=car,
+                id_oddzialu=department,
+                data_wynajecia=data_wynajecia,
+                data_zwrotu=data_zwrotu
+            )
         )
+    Wypozyczenie.objects.bulk_create(rentals)
     logger.info(f'{amount} {Wypozyczenie.__name__} instances created successfully')

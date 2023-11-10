@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-MYSQL = True
+MYSQL = False
 
 # Application definition
 
