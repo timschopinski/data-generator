@@ -1,11 +1,13 @@
 import time
 from django.core.management.base import BaseCommand
 import os
+from data.decorators import performance_measure
 
 
 class Command(BaseCommand):
     help = 'Reset the database by removing db.sqlite3, clearing migrations, and applying migrations'
 
+    @performance_measure
     def handle(self, *args, **options):
 
         db_file = 'db.sqlite3'

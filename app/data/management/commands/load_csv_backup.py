@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from data.utils import load_csv_backup
 from datetime import date
+from data.decorators import performance_measure
 
 
 class Command(BaseCommand):
@@ -10,6 +11,7 @@ class Command(BaseCommand):
         default_date = date.today().strftime('%Y-%m-%d')
         parser.add_argument('--date', type=str, default=default_date, help='Date of the csv backup in the format YYYY-MM-DD')
 
+    @performance_measure
     def handle(self, *args, **options):
         backup_date = options.get('date')
 

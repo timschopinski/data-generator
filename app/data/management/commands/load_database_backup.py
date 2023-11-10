@@ -1,3 +1,4 @@
+from data.decorators import performance_measure
 from django.core.management.base import BaseCommand
 from data.utils import load_database_backup
 from django.core.management import call_command
@@ -11,9 +12,9 @@ class Command(BaseCommand):
         default_date = date.today().strftime('%Y-%m-%d')
         parser.add_argument('--date', type=str, default=default_date, help='Date of the database backup in the format YYYY-MM-DD')
 
+    @performance_measure
     def handle(self, *args, **options):
         backup_date = options.get('date')
-        print(backup_date)
         call_command('clear_database')
         if not backup_date:
             self.stdout.write(self.style.ERROR('Please provide a valid --date argument in the format YYYY-MM-DD'))

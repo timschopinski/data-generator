@@ -25,8 +25,7 @@ def get_default_models():
     return [Oddzial, Pracownik, Samochod, Klient, Wypozyczenie]
 
 
-def remove(model_class: Model):
-    amount = model_class.objects.count()
+def remove(model_class: Model, amount: int):
     model_class.objects.all().delete()
     logger.info(f'{amount} {model_class.__name__} instances removed successfully')
 
@@ -39,8 +38,8 @@ def bulk_create(model_class: Model, instances: List[Model]) -> None:
 def clear_models(*models):
     if not models:
         models = get_default_models()
-    for model in models:
-        remove(model)
+    for model, amount in [(model, model.objects.count()) for model in models]:
+        remove(model, amount)
 
 
 def create_database_backup(*models):
