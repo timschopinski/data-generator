@@ -1,5 +1,5 @@
 import pickle
-from typing import Collection, List
+from typing import List
 import os
 from app.settings import BACKUP_DIR
 from .models import Pracownik, Samochod, Klient, Oddzial, Wypozyczenie
@@ -8,7 +8,6 @@ import logging
 import random
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
-from data.models import Samochod
 from datetime import date
 from app import settings
 import shutil
