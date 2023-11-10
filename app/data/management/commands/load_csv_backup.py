@@ -1,12 +1,14 @@
 from django.core.management.base import BaseCommand
 from data.utils import load_csv_backup
+from datetime import date
 
 
 class Command(BaseCommand):
     help = 'Load sample data into the database'
 
     def add_arguments(self, parser):
-        parser.add_argument('--date', type=str, help='Date of the csv backup in the format YYYY-MM-DD')
+        default_date = date.today().strftime('%Y-%m-%d')
+        parser.add_argument('--date', type=str, default=default_date, help='Date of the csv backup in the format YYYY-MM-DD')
 
     def handle(self, *args, **options):
         backup_date = options.get('date')

@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Samochod(models.Model):
-    numer_rejestracyjny = models.CharField(primary_key=True, max_length=10)
+    numer_rejestracyjny = models.CharField(primary_key=True, max_length=20)
     id_oddzialu = models.ForeignKey('Oddzial', on_delete=models.CASCADE)
     typ = models.CharField(max_length=50)
     producent = models.CharField(max_length=50)
