@@ -1,5 +1,5 @@
 import datetime
-
+from data.decorators import performance_measure
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 import time
@@ -26,6 +26,7 @@ class Command(BaseCommand):
         parser.add_argument('--rentals', type=int, nargs='?', default=self.default_rentals_amount,
                             help='Number of Wypozyczenie entities to create')
 
+    @performance_measure
     def handle(self, *args, **options):
         worker_amount = options['workers'] or self.default_workers_amount
         department_amount = options['departments'] or self.default_departments_amount
@@ -52,24 +53,24 @@ class Command(BaseCommand):
         call_command('create_csv_backup')
 
         self.stdout.write(self.style.SUCCESS(f'Loading data for T2 ...'))
-        # Update Databsse object
-        time.sleep(3)
-        call_command('update_database_entry')
+        with freezegun.freeze_time(datetime.date.today() + datetime.timedelta(days=30)):
+            # Update Databsse object
+            time.sleep(3)
+            call_command('update_database_entry')
 
-        # Load data
-        time.sleep(3)
-        call_command(
-            'load_database_data',
-            workers=worker_amount,
-            departments=department_amount,
-            cars=car_amount,
-            clients=client_amount,
-            rentals=rental_amount
-        )
-        call_command('load_csv_data')
+            # Load data
+            time.sleep(3)
+            call_command(
+                'load_database_data',
+                workers=worker_amount,
+                departments=department_amount,
+                cars=car_amount,
+                clients=client_amount,
+                rentals=rental_amount
+            )
+            call_command('load_csv_data')
 
-        # Create backups
-        time.sleep(3)
-        with freezegun.freeze_time(datetime.date.today() + datetime.timedelta(days=1)):
+            # Create backups
+            time.sleep(3)
             call_command('create_database_backup')
             call_command('create_csv_backup')

@@ -75,7 +75,7 @@ class WypozyczenieFactory(factory.django.DjangoModelFactory):
 
 
 def create_workers(amount):
-    departments = Oddzial.objects.all()
+    departments = Oddzial.objects.all()[:100]
     workers = []
     for _ in range(amount):
         department = random.choice(departments)
@@ -103,22 +103,14 @@ def create_departments(amount):
 
 
 def create_cars(amount):
-    departments = Oddzial.objects.all()
-    characters = [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S',
-        'U', 'W', 'X', 'Y', 'Z', 'O', 'P', 'R', 'S',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    ]
+    departments = Oddzial.objects.all()[:100]
+
     contidions = [
         'dobry', 'uszkodzony', 'powypadkowy', 'nowy', 'nowy', 'nowy',
         'dobry', 'uszkodzony', 'nowy', 'nowy', 'nowy', 'nowy',
     ]
     cars = []
     for _ in range(amount):
-        random.shuffle(characters)
         department = random.choice(departments)
         manufacturer = random.choice(list(manufacturer_models.keys()))
         model_idx = random.randint(0, len(manufacturer_models[manufacturer]['models']) - 1)
@@ -126,7 +118,6 @@ def create_cars(amount):
 
         cars.append(
             Samochod(
-                # numer_rejestracyjny=f'{department.lokalizacja[:2].upper()}{"".join(characters)[:7]}',
                 numer_rejestracyjny=f'{str(uuid.uuid4())[:15]}',
                 id_oddzialu=department,
                 producent=manufacturer,
@@ -158,9 +149,9 @@ def create_clients(amount):
 
 
 def create_rentals(amount):
-    clients = Klient.objects.all()
-    cars = Samochod.objects.all()
-    departments = Oddzial.objects.all()
+    clients = Klient.objects.all()[:100]
+    cars = Samochod.objects.all()[:100]
+    departments = Oddzial.objects.all()[:100]
     rentals = []
     for _ in range(amount):
         car = random.choice(cars)
