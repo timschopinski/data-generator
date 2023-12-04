@@ -196,14 +196,18 @@ manufacturer_models = {
 BACKUP_DIR = BASE_DIR / 'data' / 'backups'
 
 CSV_COLUMNS = [
-    "Numer rejestracyjny",
+    "NumerRejestracyjny",
     "Przebieg",
-    "Poziom oleju",
-    "Poziom płynu chłodniczego",
-    "Poziom płynu hamulcowego",
-    "Poziom płynu do spryskiwaczy",
-    "Stan wizualny",
-    "Stan techniczny"
+    "PoziomOleju",
+    "PoziomPłynuChłodniczego",
+    "PoziomPłynuHamulcowego",
+    "PoziomPłynuDoSpryskiwaczy",
+    "StanWizualny",
+    "StanTechniczny",
+    "PrzejechaneKilometry",
+    "DataOddania",
+    "DataOdebrania",
 ]
 
-CSV_FILE_NAME = "stan_techniczny_samochodow.xlsx"
+EXCEL_FILE_NAME = "stan_techniczny_samochodow.xlsx"
+CSV_FILE_NAME = "stan_techniczny_samochodow.csv"

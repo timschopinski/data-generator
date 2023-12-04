@@ -6,11 +6,15 @@ from .models import Pracownik, Samochod, Klient, Oddzial, Wypozyczenie
 from django.db.models import Model
 import logging
 import random
+import csv
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from datetime import date
 from app import settings
 import shutil
+from faker import Factory as FakerFactory
+
+faker = FakerFactory.create('pl_PL')
 
 
 def generate_rating():
@@ -82,13 +86,13 @@ def create_csv_backup():
         backup_dir = BACKUP_DIR / 'csv' / str(today)
         os.makedirs(backup_dir, exist_ok=True)
 
-        backup_file = f'backup_{settings.CSV_FILE_NAME}'
+        backup_file = f'backup_{settings.EXCEL_FILE_NAME}'
         backup_path = backup_dir / backup_file
 
-        shutil.copy2(settings.CSV_FILE_NAME, backup_path)
+        shutil.copy2(settings.EXCEL_FILE_NAME, backup_path)
 
     except FileNotFoundError:
-        raise FileNotFoundError(f"Original file not found: {settings.CSV_FILE_NAME}")
+        raise FileNotFoundError(f"Original file not found: {settings.EXCEL_FILE_NAME}")
 
     except Exception as e:
         raise Exception(f"Error creating backup: {e}")
@@ -114,8 +118,20 @@ def create_csv_data():
         ws.cell(row=row_num, column=6, value=generate_rating())
         ws.cell(row=row_num, column=7, value=generate_rating())
         ws.cell(row=row_num, column=8, value=generate_rating())
+        ws.cell(row=row_num, column=9, value=random.randint(10, 1000))
+        date_format = '%Y-%m-%d'
+        start_date_10 = faker.date_between(start_date='-30d', end_date='-14d').strftime(date_format)
+        start_date_11 = faker.date_between(start_date='-15d', end_date='today').strftime(date_format)
 
-    wb.save(settings.CSV_FILE_NAME)
+        ws.cell(row=row_num, column=10, value=start_date_10)
+        ws.cell(row=row_num, column=11, value=start_date_11)
+
+    wb.save(settings.EXCEL_FILE_NAME)
+
+    with open(settings.CSV_FILE_NAME, 'w', newline='', encoding='utf-8') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        for row in ws.iter_rows(min_row=1, max_row=ws.max_row, values_only=True):
+            csvwriter.writerow(row)
 
 
 def load_csv_backup(date=None):
@@ -126,12 +142,12 @@ def load_csv_backup(date=None):
         date = max(backup_dirs)
 
     backup_dir = BACKUP_DIR / 'csv' / date
-    backup_file = f'backup_{settings.CSV_FILE_NAME}'
+    backup_file = f'backup_{settings.EXCEL_FILE_NAME}'
     backup_path = backup_dir / backup_file
     if not os.path.exists(backup_path):
         raise FileNotFoundError(f'Backup file not found: {backup_path}')
     try:
-        shutil.copy2(backup_path, settings.CSV_FILE_NAME)
+        shutil.copy2(backup_path, settings.EXCEL_FILE_NAME)
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Error loading backup: {e}")
 
