@@ -35,25 +35,26 @@ class Command(BaseCommand):
         rental_amount = options['rentals'] or self.default_rentals_amount
 
         self.stdout.write(self.style.SUCCESS(f'Loading data for T1 ...'))
-        # Load data
-        time.sleep(3)
-        call_command(
-            'load_database_data',
-            workers=worker_amount,
-            departments=department_amount,
-            cars=car_amount,
-            clients=client_amount,
-            rentals=rental_amount
-        )
-        call_command('load_csv_data')
+        with freezegun.freeze_time(datetime.date(2023, 11, 1)):
+            # Load data
+            time.sleep(3)
+            call_command(
+                'load_database_data',
+                workers=worker_amount,
+                departments=department_amount,
+                cars=car_amount,
+                clients=client_amount,
+                rentals=rental_amount
+            )
+            call_command('load_csv_data')
 
-        # Create backups
-        time.sleep(3)
-        call_command('create_database_backup')
-        call_command('create_csv_backup')
+            # Create backups
+            time.sleep(3)
+            call_command('create_database_backup')
+            call_command('create_csv_backup')
 
         self.stdout.write(self.style.SUCCESS(f'Loading data for T2 ...'))
-        with freezegun.freeze_time(datetime.date.today() + datetime.timedelta(days=30)):
+        with freezegun.freeze_time(datetime.date(2023, 12, 1)):
             # Update Databsse object
             time.sleep(3)
             call_command('update_database_entry')

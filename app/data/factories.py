@@ -141,7 +141,9 @@ def create_clients(amount):
             Klient(
                 imie=faker.first_name(),
                 nazwisko=faker.last_name(),
-                wiek=random.randint(18, 80)
+                wiek=random.randint(18, 80),
+                lata_od_rejestracji=random.randint(1, 5),
+                czy_aktualne=random.choice([True, False])
             )
         )
     Klient.objects.bulk_create(clients)

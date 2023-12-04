@@ -19,6 +19,10 @@ class Klient(models.Model):
     imie = models.CharField(max_length=50)
     nazwisko = models.CharField(max_length=50)
     wiek = models.IntegerField()
+    lata_od_rejestracji = models.CharField(
+        max_length=10,
+    )
+    czy_aktualne = models.BooleanField(default=True)
 
 
 class Wypozyczenie(models.Model):
